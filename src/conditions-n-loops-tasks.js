@@ -329,8 +329,55 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const autoIncrement = () => {
+    let count = 0;
+    return () => {
+      count += 1;
+      return count;
+    };
+  };
+  const result = [];
+  for (let i = 0; i < size; i += 1) {
+    result[i] = [];
+  }
+  let direction = 1;
+  let matrixTop = 0;
+  let matrixBottom = size - 1;
+  let matrixLeft = 0;
+  let matrixRight = size - 1;
+  const counter = autoIncrement();
+  while (matrixTop <= matrixBottom && matrixLeft <= matrixRight) {
+    if (direction === 1) {
+      for (let i = matrixLeft; i <= matrixRight; i += 1) {
+        result[matrixTop][i] = counter();
+      }
+      matrixTop += 1;
+      direction = 2;
+    }
+    if (direction === 2) {
+      for (let i = matrixTop; i <= matrixBottom; i += 1) {
+        result[i][matrixRight] = counter();
+      }
+      matrixRight -= 1;
+      direction = 3;
+    }
+    if (direction === 3) {
+      for (let i = matrixRight; i >= matrixLeft; i -= 1) {
+        result[matrixBottom][i] = counter();
+      }
+      matrixBottom -= 1;
+      direction = 4;
+    }
+    if (direction === 4) {
+      for (let i = matrixBottom; i >= matrixTop; i -= 1) {
+        result[i][matrixLeft] = counter();
+      }
+      matrixLeft += 1;
+      direction = 1;
+    }
+  }
+  return result;
 }
 
 /**
@@ -348,8 +395,24 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const inputMatrix = matrix;
+  for (let i = 0; i < inputMatrix.length; i += 1) {
+    for (let j = i; j < inputMatrix.length; j += 1) {
+      const temp = inputMatrix[i][j];
+      inputMatrix[i][j] = inputMatrix[j][i];
+      inputMatrix[j][i] = temp;
+    }
+    let left = 0;
+    let right = inputMatrix.length - 1;
+    while (left < right) {
+      const tmp = inputMatrix[i][right];
+      inputMatrix[i][right] = inputMatrix[i][left];
+      inputMatrix[i][left] = tmp;
+      left += 1;
+      right -= 1;
+    }
+  }
 }
 
 /**
