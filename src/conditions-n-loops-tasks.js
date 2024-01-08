@@ -479,7 +479,11 @@ function sortByAsc(arr) {
  */
 function shuffleChar(str, iterations) {
   let res = str;
+  const cache = new Map();
   function shuffle(inStr) {
+    if (cache.has(inStr)) {
+      return cache.get(inStr);
+    }
     let preRes = inStr[0];
     for (let i = 2; i < inStr.length; i += 2) {
       preRes += inStr[i];
@@ -487,6 +491,7 @@ function shuffleChar(str, iterations) {
     for (let i = 1; i < inStr.length; i += 2) {
       preRes += inStr[i];
     }
+    cache.set(inStr, preRes);
     return preRes;
   }
   for (let i = 0; i < iterations; i += 1) {
