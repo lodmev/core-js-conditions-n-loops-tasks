@@ -429,35 +429,35 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(arr) {
-  function quickSort(left, right) {
-    const middle = Math.floor((left + right) / 2);
-    const pivot = arr[middle];
-    let i = left;
-    let j = right;
-    while (i <= j) {
-      while (arr[i] < pivot) {
-        i += 1;
-      }
-      while (arr[j] > pivot) {
-        j -= 1;
-      }
-      if (i >= j) {
-        break;
-      }
-      const temp = arr[i];
-      const array = arr;
-      array[i] = arr[j];
-      array[j] = temp;
+function quickSort(arr, left, right) {
+  const middle = Math.floor((left + right) / 2);
+  const pivot = arr[middle];
+  let i = left;
+  let j = right;
+  while (i <= j) {
+    while (arr[i] < pivot) {
       i += 1;
+    }
+    while (arr[j] > pivot) {
       j -= 1;
     }
-    if (left < right) {
-      quickSort(left, j);
-      quickSort(j + 1, right);
+    if (i >= j) {
+      break;
     }
+    const temp = arr[i];
+    const array = arr;
+    array[i] = arr[j];
+    array[j] = temp;
+    i += 1;
+    j -= 1;
   }
-  quickSort(0, arr.length - 1);
+  if (left < right) {
+    quickSort(arr, left, j);
+    quickSort(arr, j + 1, right);
+  }
+}
+function sortByAsc(arr) {
+  quickSort(arr, 0, arr.length - 1);
 }
 
 /**
@@ -517,8 +517,41 @@ function shuffleChar(str, iterations) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  if (Math.floor(number / 10) === 0) {
+    return number;
+  }
+  function numToArray() {
+    let num = number;
+    const res = [];
+    while (num > 0) {
+      res.push(num % 10);
+      num = Math.floor(num / 10);
+    }
+    return res.reverse();
+  }
+  function arrayToNum(arr) {
+    const num = arr.reduce(
+      (acc, n, idx) => acc + n * 10 ** (arr.length - 1 - idx),
+      0
+    );
+    return num;
+  }
+  const digits = numToArray();
+  for (let i = digits.length - 1; i > 1; i -= 1) {
+    if (digits[i] > digits[i - 1]) {
+      quickSort(digits, i, digits.length - 1);
+      for (let j = i; j < digits.length; j += 1) {
+        if (digits[j] > digits[i - 1]) {
+          const tmp = digits[j];
+          digits[j] = digits[i - 1];
+          digits[i - 1] = tmp;
+          return arrayToNum(digits);
+        }
+      }
+    }
+  }
+  return number;
 }
 
 module.exports = {
